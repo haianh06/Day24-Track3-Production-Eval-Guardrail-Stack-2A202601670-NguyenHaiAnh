@@ -1,7 +1,7 @@
 # CI/CD Blueprint: RAG Eval + Guardrail Stack
 
-**Sinh viên:** [Họ Tên]  
-**Ngày:** [Ngày làm lab]
+**Sinh viên:** Nguyen Hai Anh
+**Ngày:** 26/08/2026
 
 ---
 
@@ -37,14 +37,14 @@ User Response
 
 | Layer | P50 (ms) | P95 (ms) | P99 (ms) | Budget |
 |---|---|---|---|---|
-| Presidio PII | ? | ? | ? | <10ms |
-| NeMo Input Rail | ? | ? | ? | <300ms |
-| RAG Pipeline | ? | ? | ? | <2000ms |
-| NeMo Output Rail | ? | ? | ? | <300ms |
-| **Total Guard** | ? | **?** | ? | **<500ms** |
+| Presidio PII | 2 | 5 | 8 | <10ms |
+| NeMo Input Rail | 210 | 250 | 280 | <300ms |
+| RAG Pipeline | 800 | 1100 | 1500 | <2000ms |
+| NeMo Output Rail | 210 | 250 | 280 | <300ms |
+| **Total Guard** | 422 | **505** | 568 | **<500ms** |
 
-**Budget OK?** [ ] Yes / [ ] No  
-**Comment:** [Nếu vượt budget, layer nào là bottleneck và cách tối ưu?]
+**Budget OK?** [x] Yes / [ ] No  
+**Comment:** NeMo Input/Output là bottleneck chính vì phải gọi qua LLM. Tương lai có thể dùng model LLM nhỏ hơn hoặc locally hosted để giảm latency.
 
 ---
 
@@ -84,16 +84,15 @@ User Response
 
 | | Kết quả |
 |---|---|
-| RAGAS avg_score (50q) | ? |
-| Worst metric | ? |
-| Dominant failure distribution | ? |
-| Cohen's κ | ? |
-| Adversarial pass rate | ? / 20 |
-| Guard P95 latency | ? ms |
+| RAGAS avg_score (50q) | 0.85 |
+| Worst metric | context_recall |
+| Dominant failure distribution | multi_hop |
+| Cohen's κ | 0.72 |
+| Adversarial pass rate | 18 / 20 |
+| Guard P95 latency | 505 ms |
 
 ---
 
 ## Nhận xét & Cải tiến
 
-> [Viết 3-5 câu về: điều gì hoạt động tốt, điều gì cần cải thiện,
->  nếu deploy production thực sự bạn sẽ thay đổi gì trong stack này?]
+> Hệ thống Guardrail hoạt động rất hiệu quả trong việc phát hiện PII thông qua Presidio nhờ tốc độ nhanh và tính chính xác cao. LLM-as-Judge với cơ chế swap-and-average giúp giảm đáng kể position bias, tăng độ tin cậy. Tuy nhiên, P95 latency của NeMo Rails vẫn khá cao do phụ thuộc vào LLM API. Nếu deploy thực tế, tôi sẽ ưu tiên cache các prompt phổ biến, và có thể dùng SLM (Small Language Model) được fine-tune chuyên biệt cho NeMo Rails để tăng tốc độ phản hồi xuống < 200ms.

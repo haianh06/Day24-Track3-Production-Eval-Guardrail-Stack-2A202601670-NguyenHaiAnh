@@ -7,6 +7,7 @@ load_dotenv()
 
 # --- API Keys ---
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 HF_TOKEN = os.getenv("HF_TOKEN", "")  # Optional: for HuggingFace models
 
 # --- Qdrant (same as Day 18) ---
@@ -38,7 +39,7 @@ ADVERSARIAL_SET_PATH = os.path.join(os.path.dirname(__file__), "adversarial_set_
 GUARDRAILS_CONFIG_DIR = os.path.join(os.path.dirname(__file__), "guardrails")
 
 # --- LLM Judge ---
-JUDGE_MODEL = "gpt-4o-mini"
+JUDGE_MODEL = "gemini-1.5-flash"
 
 # --- Guardrail latency budget ---
 LATENCY_BUDGET_P95_MS = 500  # target: full guard stack P95 < 500ms
